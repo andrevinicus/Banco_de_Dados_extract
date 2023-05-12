@@ -1,0 +1,18 @@
+select
+extract (year from p.dt_emissao) as ano,
+extract(month from p.dt_emissao) as mes,
+i.ds_item,
+  sum(
+  coalesce(pit.qt_pedida, 0) *
+  coalesce(pit.vl_unitario, 0))as valor_total
+from pedido p
+left join pedidoitem pit using(cd_pedido, tp_pedido)
+left join item i using ()
+where (p.tp_pedido = "V")
+group by 
+extract (year from p.dt_emissao),
+extract(month from p.dt_emissao),
+i.ds_item
+order by 
+extract (year from p.dt_emissao),
+extract(month from p.dt_emissao)
